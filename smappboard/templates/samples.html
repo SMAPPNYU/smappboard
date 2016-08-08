@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+    <ul class="list-unstyled center-block text-center">
+      {% for dataset in datasets %}
+        <li>
+          <a href="{{ url_for('get_sample_for_dataset', data_set_name=dataset) }}">{{ dataset }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+{% endblock %}

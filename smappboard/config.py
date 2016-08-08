@@ -13,14 +13,14 @@ class Config(object):
 class ProductionConfig(Config):
     DEVELOPMENT = False
     DEBUG = False
-    MONGO_HOST = os.environ['SMAPPBOARD_MONGO_HOST']
-    MONGO_PORT = os.environ['MONGO_PORT']
+    SMAPPBOARD_MONGO_HOST = os.environ['SMAPPBOARD_MONGO_HOST']
+    SMAPPBOARD_MONGO_PORT = os.environ['SMAPPBOARD_MONGO_PORT']
 
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
-    MONGO_HOST = os.environ['SMAPPBOARD_MONGO_HOST']
-    MONGO_PORT = os.environ['MONGO_PORT']
+    SMAPPBOARD_MONGO_HOST = os.environ['SMAPPBOARD_MONGO_HOST']
+    SMAPPBOARD_MONGO_PORT = os.environ['SMAPPBOARD_MONGO_PORT']
     IGNORE_DBS = ['admin', 'FilterCriteriaAdmin', 'test', 'config']
 
 class TestingConfig(Config):
