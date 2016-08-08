@@ -7,8 +7,8 @@ class Config(object):
     CSRF_ENABLED = True
     WTF_CSRF_ENABLED = True
     SECRET_KEY = os.environ['FLASK_SECRET_KEY']
-    MONGO_READONLY_USER = os.environ['MONGO_READONLY_USER']
-    MONGO_READONLY_PASS = os.environ['MONGO_READONLY_PASS']
+    MONGO_READONLY_USER = os.environ['SMAPPBOARD_MONGO_READONLY_USER']
+    MONGO_READONLY_PASS = os.environ['SMAPPBOARD_MONGO_READONLY_PASS']
     
 class ProductionConfig(Config):
     DEVELOPMENT = False
@@ -19,8 +19,8 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
-    MONGO_HOST = 'localhost'
-    MONGO_PORT = 49999
+    MONGO_HOST = os.environ['SMAPPBOARD_MONGO_HOST']
+    MONGO_PORT = os.environ['MONGO_PORT']
     IGNORE_DBS = ['admin', 'FilterCriteriaAdmin', 'test', 'config']
 
 class TestingConfig(Config):
