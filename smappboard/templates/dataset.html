@@ -4,7 +4,6 @@
     <ul class="nav nav-pills">
       <li class="active"><a href="#metadata" data-toggle="pill">metadata</a></li>
       <li><a href="#filters" data-toggle="pill">filters</a></li>
-      <li><a href="#data" data-toggle="pill">data</a></li>
       <li><a href="#access" data-toggle="pill">access</a></li>
     </ul>
 
@@ -19,13 +18,14 @@
           <p>number of tweets: {{ "{:,}".format(num_tweets) }} </p>
         </div>
         <div role="tabpanel" class="tab-pane" id="filters">
-        
+          {% for filter in filter_list %}
+          <br/>
+          <p>filter type: {{ filter.filter_type }}</p>
+          <p>filter: {{ filter.filter }}</p>
+          {% endfor %}
         </div>
         <div role="tabpanel" class="tab-pane" id="access">
         
-        </div>
-        <div role="tabpanel" class="tab-pane active" id="data">
-
         </div>
     </div>
 {% endblock %}
