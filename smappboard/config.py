@@ -13,8 +13,8 @@ class Config(object):
 class ProductionConfig(Config):
     DEVELOPMENT = False
     DEBUG = False
-    MONGO_HOST = 'localhost'
-    MONGO_PORT = 49999
+    MONGO_HOST = os.environ['SMAPPBOARD_MONGO_HOST']
+    MONGO_PORT = os.environ['MONGO_PORT']
 
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
