@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% block head %}
+      <title>smappboard</title>
+      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+      {% block head_meta %}
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta name="description" content="">
+          <meta name="author" content="">
+      {% endblock %}
+      {% block head_css %}
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+      <!-- jQuery library -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+      <!-- Latest compiled JavaScript -->
+      <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+          <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+          <style>
+            body {
+              padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+            }
+          </style>
+      {% endblock %}
+    {% endblock %}
+  </head>
+
+  <body>
+    <!-- navbar at the top -->
+    <div class="navbar navbar-fixed-top navbar-default" style="padding-top: 5px">
+        <div class="container">
+          <div class="nav navbar-nav">
+            <ul class="nav nav-pills">
+              <li><a href="/">smappboard</a></li>
+              <li><a href="/datasets" id="linkdatasets">datasets</a></li>
+              <li><a href="/samples" id="linksamples">samples</a></li>
+              <li><a href="/trending" id="linktrending">trending</a></li>
+              <li><a href="/access" id="linkaccess">access</a></li>
+              <li><a href="http://128.122.3.75/app/kibana#/dashboard/A-Collections-Overview" id="linkkibana" target="_blank">kibana</a></li>
+            </ul>
+          </div>
+        </div>
+    </div>
+
+    <div class="container">
+      {% block body %}
+      {% endblock %}
+    </div>
+    {% block tail %}
+    {% endblock %}
+  </body>
+</html>

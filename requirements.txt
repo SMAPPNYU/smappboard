@@ -1,0 +1,6 @@
+smappboard
+flask==0.10.1
+gunicorn==19.4.5
+pymongo==3.2.2
+Flask-Bootstrap==3.3.6.0
+humanize==0.5.1

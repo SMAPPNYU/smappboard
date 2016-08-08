@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>{{ dataset_name }}</h2>
+<div class="well">
+    <ul class="nav nav-pills">
+      <li class="active"><a href="#metadata" data-toggle="pill">metadata</a></li>
+      <li><a href="#filters" data-toggle="pill">filters</a></li>
+      <li><a href="#data" data-toggle="pill">data</a></li>
+      <li><a href="#access" data-toggle="pill">access</a></li>
+    </ul>
+
+    <div class="tab-content" style="padding-top: 5px">
+        <div role="tabpanel" class="tab-pane active" id="metadata">
+          <p>platform: {{ dataset_platform }}</p>
+
+          <p>data type: {{ data_type }}</p>
+
+          <p>database size: {{ dataset_size }}</p>
+
+          <p>number of tweets: {{ "{:,}".format(num_tweets) }} </p>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="filters">
+        
+        </div>
+        <div role="tabpanel" class="tab-pane" id="access">
+        
+        </div>
+        <div role="tabpanel" class="tab-pane active" id="data">
+
+        </div>
+    </div>
+</div>
+{% endblock %}
