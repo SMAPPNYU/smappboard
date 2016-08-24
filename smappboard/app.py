@@ -6,6 +6,7 @@ import os
 import re
 import ast
 import json
+import locale
 import tweepy
 import pysmap
 import pymongo
@@ -83,8 +84,10 @@ def get_current_worlwide_trends():
     try:
         # https://dev.twitter.com/rest/reference/get/trends/place
         global_trends = api.trends_place(1)[0]
-        # return render_template('trending.html', global_trends=global_trends['trends'], tweet_volume=trend.get('tweet_volume'))
-        return jsonify(global_trends)
+        # for getting commas, did it dif elsewhere
+        # for some reason jinja isnt working here
+        locale.setlocale(locale.LC_ALL, 'en_US')
+        return render_template('trending.html', global_trends=[{'url': trend.get('url'), 'name': trend.get('name'), 'tweet_volume': locale.format("%d", int(trend.get('tweet_volume')) if trend.get('tweet_volume') else 0, grouping=True)} for trend in global_trends['trends']])
     except tweepy.TweepError as e:
         # with single quotes, ast is the only thing that
         # reliably loads json responses from twitter with
