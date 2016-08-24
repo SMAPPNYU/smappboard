@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>there was an error</h2>
+
+<p>error message: <b>{{ error.get('message') }}</b></p>
+<p>response code: <b>{{ error.get('response_code') }}</b></p>
+<p>error code: <b>{{ error.get('code') }}</b></p>
+
+{% endblock %}

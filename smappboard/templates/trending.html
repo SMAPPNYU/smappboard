@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>latest global trends</h2>
+
+{% for trend in global_trends %}
+
+<p> trend: <b><a href="{{ trend.get('url') }}">{{ trend.get('name') }}</a></b></p>
+<p>number of tweets: <b>{{ "{:,}".format(tweet_volume) }}</b></p>
+</br>
+</br>
+
+{% endfor %}
+
+{% endblock %}

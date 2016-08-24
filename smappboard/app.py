@@ -4,7 +4,9 @@ primary file with app logic
 
 import os
 import re
+import ast
 import json
+import tweepy
 import pysmap
 import pymongo
 import humanize
@@ -71,6 +73,24 @@ def get_sample_for_dataset(data_set_name):
     for tweet in pysmap_dataset.limit_number_of_tweets(50):
         tweet_sample.append(dumps(tweet, sort_keys=True, indent=4, separators=(',', ': ')))
     return render_template('sample.html', tweet_sample=tweet_sample, dataset_name=data_set_name)
+
+@app.route('/trending')
+def get_current_worlwide_trends():
+    auth = tweepy.OAuthHandler(app.config['SMAPPBOARD_TRENDS_CONSUMER_KEY'], app.config['SMAPPBOARD_TRENDS_CONSUMER_SECRET'])
+    auth.set_access_token(app.config['SMAPPBOARD_TRENDS_ACCESS_TOKEN'], app.config['SMAPPBOARD_TRENDS_ACCESS_TOKEN_SECRET'])
+    api = tweepy.API(auth)
+
+    try:
+        # https://dev.twitter.com/rest/reference/get/trends/place
+        global_trends = api.trends_place(1)[0]
+        # return render_template('trending.html', global_trends=global_trends['trends'], tweet_volume=trend.get('tweet_volume'))
+        return jsonify(global_trends)
+    except tweepy.TweepError as e:
+        # with single quotes, ast is the only thing that
+        # reliably loads json responses from twitter with
+        # single quotes
+        error_object = ast.literal_eval(e.reason[1:-1])
+        return render_template('error.html', error={'message': error_object['message'], 'code': error_object['code'], 'response_code': e.response.status_code})
 
 if __name__ == '__main__':
     app.run()

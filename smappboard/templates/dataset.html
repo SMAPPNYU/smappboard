@@ -11,17 +11,17 @@
         <div role="tabpanel" class="tab-pane active" id="metadata">
           <p>platform: {{ dataset_platform }}</p>
 
-          <p>data type: {{ data_type }}</p>
+          <p>data type: <b>{{ data_type }}</b></p>
 
-          <p>database size: {{ dataset_size }}</p>
+          <p>database size: <b>{{ dataset_size }}</b></p>
 
-          <p>number of tweets: {{ "{:,}".format(num_tweets) }} </p>
+          <p>number of tweets: <b>{{ "{:,}".format(num_tweets) }}</b></p>
         </div>
         <div role="tabpanel" class="tab-pane" id="filters">
           {% for filter in filter_list %}
           <br/>
           <p>filter type: {{ filter.filter_type }}</p>
-          <p>filter: {{ filter.filter }}</p>
+          <p>filter: <b>{{ filter.filter }}</b></p>
           {% endfor %}
         </div>
         <div role="tabpanel" class="tab-pane" id="access">

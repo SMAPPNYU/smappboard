@@ -145,13 +145,13 @@ lists all collections that should be running
 
 get the page for an individual dataset, this is where you can do things related to that dataset
 
-#/permissions
+#/access
 
 takes you to a page that cna be used to manage permissions for each collection, remove a user from all collections, etc.
 
-#archive
+#/trends
 
-lists collections that are no longer running. collections that are no longer on the db will have an 'archived' indicator. you can press a button a request these here.   
+takes you to a page that has the current top global twitter trends, feulued by an a twitter api 4 token set in config.py
 
 #development
 
