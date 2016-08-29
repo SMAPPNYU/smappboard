@@ -68,4 +68,8 @@ target/
 #ignore instance configuration
 instance/
 
+# ignore environment vars
 env.sh
+
+# twitter handles authorized
+smappboard_users.json
