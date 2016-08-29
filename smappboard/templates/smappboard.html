@@ -1,4 +1,43 @@
 {% extends "layout.html" %}
 {% block body %}
-yo
+
+<ul class="list-unstyled center-block text-center">
+
+{% if should_show_twitter_login %}
+
+<li>
+    <p>heyo and welcome smappers. this is the smapp dashboard (aka smappboard). first sign in with twitter:</p>
+</li>
+
+<li>
+    <p><a href='/login'><img src="https://g.twimg.com/dev/sites/default/files/images_documentation/sign-in-with-twitter-gray.png" alt="Sign in with Twitter" title="Sign in with Twitter"></a></p>
+</li>
+
+{% else %}
+
+<li>
+    <p>heyo and welcome smappers. this is the smapp dashboard (aka smappboard). it looks like you're logged in already.</p>
+</li>
+
+{% endif %}
+
+<li>
+    <p>datasets: you can get basic info about your datasets here</p>
+</li>
+
+<li>
+    <p>samples: to get a small sample (50 most recent tweets) click the dataset you want</p>
+</li>
+
+<li>
+    <p>trending: to see a list of the top 50 global trends go here</p>
+</li>
+
+<li>
+    <p>kibana: hooks up to our elastic search cluster and can be used to run queries on your data or visualize it</p>
+</li>
+
+
+</ul>
+
 {% endblock %}

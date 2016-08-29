@@ -9,3 +9,4 @@ dependencies:
     - Flask-Bootstrap==3.3.6.0
     - humanize==0.5.1
     - tweepy==3.5.0
+    - Flask-OAuthlib==0.9.3

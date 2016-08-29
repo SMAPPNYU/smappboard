@@ -4,7 +4,7 @@
 
 {% for trend in global_trends %}
 
-<p> trend: <b><a href="{{ trend.get('url') }}">{{ trend.get('name') }}</a></b></p>
+<p> trend: <b><a href="{{ trend.get('url') }}" target="_blank">{{ trend.get('name') }}</a></b></p>
 <p>number of tweets: <b>{{ trend.get('tweet_volume') }}</b></p>
 </br>
 </br>

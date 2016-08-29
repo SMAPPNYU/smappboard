@@ -155,6 +155,14 @@ takes you to a page that has the current top global twitter trends, feulued by a
 
 #development
 
+if you try to run the oauth routes for twitter (specifically the /login route) it will complain at you with [this issue](http://stackoverflow.com/questions/37950999/twitter-oauth-with-flask-oauthlib-failed-to-generate-request-token):
+
+```
+flask_oauthlib.client.OAuthException: Failed to generate request token
+```
+
+this is caused by lacking a callback url setting on your app's page. if you are working on localhost this is a pain. you can put a placeholder url there until you get the real one.
+
 everytime you go to develop run these steps:
 
 create anaconda environment `conda env create`
