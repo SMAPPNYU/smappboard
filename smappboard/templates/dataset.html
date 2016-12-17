@@ -2,26 +2,35 @@
 {% block body %}
 <h2>{{ dataset_name }}</h2>
     <ul class="nav nav-pills">
-      <li class="active"><a href="#metadata" data-toggle="pill">metadata</a></li>
+      <li class="active"><a href="#data" data-toggle="pill">data</a></li>
+      <li><a href="#metadata" data-toggle="pill">metadata</a></li>
       <li><a href="#filters" data-toggle="pill">filters</a></li>
       <li><a href="#access" data-toggle="pill">access</a></li>
     </ul>
 
     <div class="tab-content" style="padding-top: 5px">
-        <div role="tabpanel" class="tab-pane active" id="metadata">
+        <div role="tabpanel" class="tab-pane active" id="data">
+
+          {% for path in file_paths %}
+
+          <p>{{ path }}</p>
+
+          {% endfor %}
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="metadata">
           <p>platform: {{ dataset_platform }}</p>
 
           <p>data type: <b>{{ data_type }}</b></p>
 
-          <p>database size: <b>{{ dataset_size }}</b></p>
+          <p>compressed database size in GB: <b>{{ dataset_size }}</b></p>
 
-          <p>number of tweets: <b>{{ "{:,}".format(num_tweets) }}</b></p>
         </div>
         <div role="tabpanel" class="tab-pane" id="filters">
           {% for filter in filter_list %}
           <br/>
           <p>filter type: {{ filter.filter_type }}</p>
-          <p>filter: <b>{{ filter.filter }}</b></p>
+          <p>filter: <b>{{ filter.value }}</b></p>
           {% endfor %}
         </div>
         <div role="tabpanel" class="tab-pane" id="access">

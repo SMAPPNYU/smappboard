@@ -173,6 +173,35 @@ export a flask secret wih `export FLASK_SECRET_KEY=YOUR_SECRET` read aobut how t
 
 then type `make run` or `gunicorn smappboard.app:app`
 
+
+#how to connect to olympus
+
+1 - map a port from a machine with scratch to the machine running the flask app
+
+2 - mount sshfs over this port mapping.
+
+3 - you can map a port from where we run our collector tunnels, or any other place with access to hpc /scratch/olympus/
+
+in practice:
+
+sudo mkdir -p /mnt/olympus/
+
+[setup hpctunnel as here](https://github.com/SMAPPNYU/smapphowto/blob/master/howto_get_started_on_the_hpc_cluster.md#5--moving-data-to-your-computer).
+
+ssh hpctunnel
+
+bash sshfs_mount.sh yns207 8023 /home/yvan/.ssh/id_rsa (enter your hpc password when prompted).
+
+to run sshfs you will need fuse and sshfs from [here](https://osxfuse.github.io/): https://osxfuse.github.io/
+
+to unmount the fs:
+
+sudo umount /mnt/olympus
+
+there may be two password prompts that look the same, first is your computers sudo password, the second i you hpc password.
+
+you can edit the script to mount /scratch/olympus (more performant but gets purged) or to mount /archive/smapp/olympus, but there are some concerns about the performance of the archive
+
 #author
 
 [yvan](https://github.com/yvan)
