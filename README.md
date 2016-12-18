@@ -184,19 +184,19 @@ then type `make run` or `gunicorn smappboard.app:app`
 
 in practice:
 
-sudo mkdir -p /mnt/olympus/
+`sudo mkdir -p /mnt/olympus/`
 
 [setup hpctunnel as here](https://github.com/SMAPPNYU/smapphowto/blob/master/howto_get_started_on_the_hpc_cluster.md#5--moving-data-to-your-computer).
 
-ssh hpctunnel
+`ssh hpctunnel`
 
-bash sshfs_mount.sh yns207 8023 /home/yvan/.ssh/id_rsa (enter your hpc password when prompted).
+`bash sshfs_mount.sh yns207 8023 /home/yvan/.ssh/id_rsa` (enter your hpc password when prompted).
 
 to run sshfs you will need fuse and sshfs from [here](https://osxfuse.github.io/): https://osxfuse.github.io/
 
 to unmount the fs:
 
-sudo umount /mnt/olympus
+`sudo umount /mnt/olympus`
 
 there may be two password prompts that look the same, first is your computers sudo password, the second i you hpc password.
 

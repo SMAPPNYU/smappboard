@@ -7,24 +7,19 @@
       <li><a href="#filters" data-toggle="pill">filters</a></li>
       <li><a href="#access" data-toggle="pill">access</a></li>
     </ul>
-
     <div class="tab-content" style="padding-top: 5px">
         <div role="tabpanel" class="tab-pane active" id="data">
-
           {% for path in file_paths %}
-
           <p>{{ path }}</p>
-
           {% endfor %}
         </div>
-
         <div role="tabpanel" class="tab-pane" id="metadata">
-          <p>platform: {{ dataset_platform }}</p>
-
-          <p>data type: <b>{{ data_type }}</b></p>
-
+          <p>platform: <b>{{ metadata['platform'] }}</b></p>
+          <p>data type: <b>{{ metadata['data_type'] }}</b></p>
           <p>compressed database size in GB: <b>{{ dataset_size }}</b></p>
-
+          <p>is dataset frozen: <b>{{ metadata['frozen'] }}</b></p>
+          <p>% throwout rate: <b>{{ metadata['throwout_rate'] }}</b></p>
+          <p>dataset owner: <b>{{ metadata['owner'] }}</b></p>
         </div>
         <div role="tabpanel" class="tab-pane" id="filters">
           {% for filter in filter_list %}
@@ -34,7 +29,11 @@
           {% endfor %}
         </div>
         <div role="tabpanel" class="tab-pane" id="access">
-        
+          {% for user_access in users_access %}
+          <br/>
+          <p>user: <b>{{ user_access[0] }}</b></p>
+          <p>permission level: {{ user_access[1] }}</p>
+          {% endfor %}
         </div>
     </div>
 {% endblock %}

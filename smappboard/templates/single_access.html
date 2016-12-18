@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>permissions for user {{ user_screen_name }}</h2>
+
+{% for dataset in user_datasets %}
+
+{{ dataset[0] }}, {{ dataset[1] }}
+</br>
+</br>
+
+{% endfor %}
+
+{% endblock %}

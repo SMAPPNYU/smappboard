@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+    <ul class="list-unstyled center-block text-center">
+      {% for user in users %}
+        <li>
+          <a href="{{ url_for('single_access', user_name=user) }}">{{ user }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+{% endblock %}

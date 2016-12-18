@@ -43,7 +43,6 @@ from smappboard.models import filter_criterion, permission, post_filter, tweet
 
 #decorator for a function to only allow people who have logged into twitter
 def twitter_logged_in(func):
-
     def not_authorized_func():
         return render_template('error.html', error={'message': 'you are not an authorized user', 'code': 403, 'response_code': 403})
 
@@ -51,7 +50,7 @@ def twitter_logged_in(func):
     def wrapper(*args, **kwargs):
         with open(os.path.dirname(os.path.abspath(__file__))+'/'+app.config['PATH_TO_SMAPPBOARD_USERS'], 'r') as file:
             authed_users_list = json.load(file)
-            print(authed_users_list)
+            authed_users_list = [v.lower() for v in authed_users_list]
             if current_user() in authed_users_list:
                 return func(*args, **kwargs)
             else:
@@ -61,11 +60,9 @@ def twitter_logged_in(func):
 # the base route
 @app.route('/')
 def main_page():
-    if session.get('twitter_token'):
-        should_show_twitter_login = False
-    else:
-        should_show_twitter_login = True
-    return render_template('smappboard.html', should_show_twitter_login=should_show_twitter_login)
+    return render_template('smappboard.html',
+     should_show_twitter_login=(not current_user()),
+     user_logged_in=current_user())
 
 # the route to get the list of datasets
 @app.route('/datasets', methods=['GET'])
@@ -73,7 +70,7 @@ def main_page():
 def datasets_list():
     #list folders on olympus
     dirs = os.listdir(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'])
-    return render_template('datasets.html', datasets=dirs)
+    return render_template('datasets.html', datasets=dirs, user_logged_in=current_user())
 
 # the single dataset page
 @app.route('/dataset/<string:data_set_name>', methods=['GET'])
@@ -85,48 +82,79 @@ def single_dataset(data_set_name):
         for f in filenames:
             fp = os.path.join(dirpath, f)
             total_size += os.path.getsize(fp)
-    paths = [path.replace('/mnt/olympus/','/archive/smapp/olympus/') for path in glob.glob(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, '*'))]
+    paths = sorted([path.replace(os.path.join('/mnt/olympus/',data_set_name,'data/'),'') for path in glob.glob(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'data', '*'))])
     metadata = json.load(open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'metadata', 'metadata.json')))
     filters = [json.loads(line) for line in open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],data_set_name, 'filters', 'filters.json'))]
-    return render_template('dataset.html', 
-        dataset_name=data_set_name, 
-        file_paths=paths, 
-        dataset_platform=metadata['platform'], 
-        data_type=metadata['data_type'],
-        dataset_size=total_size/1000000000,
-        filter_list=filters)
+    user_screen_names = [permission[0] for permission in metadata['authorized_twitter_handles']]
+
+    if current_user() in user_screen_names:
+        return render_template('dataset.html', 
+            dataset_name=data_set_name, 
+            file_paths=paths,
+            users_access=metadata['authorized_twitter_handles'],
+            metadata=metadata,
+            dataset_size=total_size/1000000000,
+            filter_list=filters,
+            user_logged_in=current_user())
+    else:
+        return render_template('error.html', error={'message': 'you are not an authorized user for this dataset', 'code': 403, 'response_code': 403}, user_logged_in=current_user())
 
 # the route to manage access (need to have admin twitter id)
-# @app.route('/access/<string:data_set_name>', methods=['GET'])
-# #@twitter_logged_in
-# def dataset_dashboard(data_set_name):
-#     return data_set_name
+@app.route('/access', methods=['GET'])
+@twitter_logged_in
+def access_list():
+    users = json.load(open(os.path.dirname(os.path.abspath(__file__))+'/'+app.config['PATH_TO_SMAPPBOARD_USERS'],'r'))
+    return render_template('datasets_access.html', users=users, user_logged_in=current_user())
+
+# the route to manage access (need to have admin twitter id)
+@app.route('/single_access/<string:user_name>', methods=['GET'])
+@twitter_logged_in
+def single_access(user_name):
+    metadatas = glob.glob(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], '*', 'metadata', 'metadata.json'))
+    datasets_for_user = []
+    for metadata in metadatas:
+        m = re.search('/mnt/olympus/(.*)/metadata/metadata.json', metadata)
+        om = open(metadata,'r')
+        metadata = json.load(om)
+        permission = 'nil'
+        for handle,permission in metadata['authorized_twitter_handles']:
+            if handle == user_name:
+                permission = permission
+        datasets_for_user.append([m.group(1), permission])
+        om.close()
+    return render_template('single_access.html',
+        user_screen_name=user_name,
+        user_datasets=datasets_for_user,
+        user_logged_in=current_user())
 
 # the route to get to all datasets for getting a sample of recent tweet objects
-# @app.route('/samples', methods=['GET'])
-# #@twitter_logged_in
-# def get_samples():
-#     # get db names from mongo
-#     mongo = pymongo.MongoClient(app.config['SMAPPBOARD_MONGO_HOST'], int(app.config['SMAPPBOARD_MONGO_PORT']))
-#     db_names = [db_name for i, db_name in enumerate(mongo.database_names()) if db_name not in app.config['IGNORE_DBS']]
-#     return render_template('samples.html', datasets=db_names)
+@app.route('/samples', methods=['GET'])
+@twitter_logged_in
+def get_samples():
+    #list folders on olympus
+    dirs = os.listdir(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'])
+    return render_template('samples.html', datasets=dirs, user_logged_in=current_user())
 
-# the sample for a single dataset
-# @app.route('/sample/<string:data_set_name>', methods=['GET'])
-# #@twitter_logged_in
-# def get_sample_for_dataset(data_set_name):
-#     pysmap_dataset = pysmap.SmappDataset(['mongo', app.config['SMAPPBOARD_MONGO_HOST'], app.config['SMAPPBOARD_MONGO_PORT'], app.config['MONGO_READONLY_USER'], app.config['MONGO_READONLY_PASS'], data_set_name], collection_regex='(^data$|^tweets$|^tweets_\d+$)')
-#     tweet_sample = []
-#     for tweet in pysmap_dataset.limit_number_of_tweets(50):
-#         tweet_sample.append(dumps(tweet, sort_keys=True, indent=4, separators=(',', ': ')))
-#     return render_template('sample.html', tweet_sample=tweet_sample, dataset_name=data_set_name)
+# the sample for a single dataset, will only work if mounting 
+# scratch and not archive, it needs a .json file amoung the
+# .json.bz2, to pull tweets from
+@app.route('/sample/<string:data_set_name>', methods=['GET'])
+@twitter_logged_in
+def get_sample_for_dataset(data_set_name):
+    pysmap_dataset = pysmap.SmappDataset(['json', 'file_pattern', os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'data','*.json')])
+    tweet_sample = []
+    for tweet in pysmap_dataset.limit_number_of_tweets(50):
+        tweet_sample.append(dumps(tweet, sort_keys=True, indent=4, separators=(',', ': ')))
+    if len(tweet_sample) == 0:
+        return render_template('error.html', error={'message': 'there are no sample tweets', 'code': 404, 'response_code': 404}, user_logged_in=current_user())
+    else:
+        return render_template('sample.html', tweet_sample=tweet_sample, dataset_name=data_set_name, user_logged_in=current_user())
 
 # the trending page which grabs 15 most recent twitter trends
 # token there has 15 charges, if you, plug in your own token
 @app.route('/trending', methods=['GET', 'POST'])
-# @twitter_logged_in
+@twitter_logged_in
 def get_current_worlwide_trends():
-
     # use the builtin token to get trends
     if request.method == 'GET':
         auth = tweepy.OAuthHandler(app.config['SMAPPBOARD_TRENDS_CONSUMER_KEY'], app.config['SMAPPBOARD_TRENDS_CONSUMER_SECRET'])
@@ -139,13 +167,22 @@ def get_current_worlwide_trends():
             # for getting commas, did it dif elsewhere
             # for some reason jinja isnt working here
             locale.setlocale(locale.LC_ALL, 'en_US')
-            return render_template('trending.html', global_trends=[{'url': trend.get('url'), 'name': trend.get('name'), 'tweet_volume': locale.format("%d", int(trend.get('tweet_volume')) if trend.get('tweet_volume') else 0, grouping=True)} for trend in global_trends['trends']])
+            tweet_volume = [
+                {
+                'url': trend.get('url'), 'name': trend.get('name'),
+                'tweet_volume': locale.format("%d", int(trend.get('tweet_volume')) if trend.get('tweet_volume') else 0, grouping=True)
+                } 
+                for trend in global_trends['trends']
+            ]
+            return render_template('trending.html',
+            global_trends=tweet_volume,
+            user_logged_in=current_user())
         except tweepy.TweepError as e:
             # with single quotes, ast is the only thing that
             # reliably loads json responses from twitter with
             # single quotes
             error_object = ast.literal_eval(e.reason[1:-1])
-            return render_template('error.html', error={'message': error_object['message'], 'code': error_object['code'], 'response_code': e.response.status_code})
+            return render_template('error.html', error={'message': error_object['message'], 'code': error_object['code'], 'response_code': e.response.status_code}, user_logged_in=current_user())
     # use your own token to get trends
     elif request.method == 'POST':
         return jsonify({"message": "not implemented"}), 200
@@ -179,7 +216,7 @@ def authorized():
 def current_user():
     token = session.get('twitter_token')
     if token:
-        return token.get('screen_name')
+        return token.get('screen_name').lower()
     return None
 
 if __name__ == '__main__':
