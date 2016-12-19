@@ -110,6 +110,29 @@ install with:
 ```bash
 pip install -r requirements.txt
 ```
+#env.sh
+
+make an env.sh
+```
+export FLASK_SECRET_KEY='YOUR_APP_SECRET_KEY'
+export APP_SETTINGS='smappboard.config.DevelopmentProduction'
+export SMAPPBOARD_TRENDS_CONSUMER_KEY='CONSUMER_KEY'
+export SMAPPBOARD_TRENDS_CONSUMER_SECRET='CONSUMER_SECRET'
+export SMAPPBOARD_TRENDS_ACCESS_TOKEN='ACCESS_TOKEN'
+export SMAPPBOARD_TRENDS_ACCESS_TOKEN_SECRET='ACCESS_TOKEN_SECRET'
+export SMAPPBOARD_CONSUMER_KEY='YOUR_APPS_CONSUMER_KEY'
+export SMAPPBOARD_CONSUMER_SECRET='YOUR_APPS_CONSUMRE_SECRET'
+export PATH_TO_SMAPPBOARD_USERS='smappboard_users.json'
+export SMAPPBOARD_SSHFS_MOUNT_POINT='/mnt/olympus'
+```
+
+then run:
+```
+source env.sh
+```
+
+these environment variable are stored in the bash environment and can be used to store any appwide constants
+that you wish. they are loaded from this bash environment inside `smappboard/config.py.`
 
 #app.py
 
