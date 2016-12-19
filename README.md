@@ -97,7 +97,9 @@ to unmount the fs:
 
 there may be two password prompts that look the same, first is your computers sudo password, the second i you hpc password.
 
-you can edit the script to mount /scratch/olympus (more performant but gets purged) or to mount /archive/smapp/olympus, but there are some concerns about the performance of the archive
+you can edit the script to mount /scratch/olympus (more performant but gets purged) or to mount /archive/smapp/olympus, but there are some concerns about the performance of the archive.
+
+you may have to remove defer_permissions from sshfs_mount on some unix oses. sshfs on mac is a bit different from those places.
 
 ##how to setup nginx (the http server) and gunicorn (the app server):
 
