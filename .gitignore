@@ -70,6 +70,7 @@ instance/
 
 # ignore environment vars
 env.sh
+sshfs_mount.sh
 
 # twitter handles authorized
 smappboard_users.json
