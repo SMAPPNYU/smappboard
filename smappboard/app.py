@@ -10,8 +10,6 @@ import json
 import locale
 import tweepy
 import pysmap
-import pymongo
-import humanize
 
 from functools import wraps
 from datetime import datetime, timedelta

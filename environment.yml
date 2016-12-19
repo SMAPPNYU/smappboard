@@ -5,8 +5,7 @@ dependencies:
 - pip:
     - flask==0.11
     - gunicorn==19.4.5
-    - pymongo==3.2.2
+    - pysmap==0.0.25
     - Flask-Bootstrap==3.3.6.0
-    - humanize==0.5.1
     - tweepy==3.5.0
     - Flask-OAuthlib==0.9.3
