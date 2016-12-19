@@ -125,7 +125,7 @@ server {
     root /path/to/folder/containing/your/app/file/;
 
     access_log /path/to/where/you/want/your/access/logs/nginx/access.log;
-    error_log /path/to/where/you/want/your/error/logs/nginx/access.log;
+    error_log /path/to/where/you/want/your/error/logs/nginx/error.log;
 
     location / {
         proxy_set_header X-Forward-For $proxy_add_x_forwarded_for;
@@ -146,7 +146,7 @@ server {
 
 note `proxy_pass` is the bind address of your gunicorn deamon / porgram, i've left it on 127.0.0.1 (localhost) port 8000 as that is gunicorn's default port binding.
 
-4 - setup log filer declared in nginx and also for gunicorn
+4 - setup log files declared in nginx (`access_log` and `error_log`) and also for gunicorn
 
 `mkdir -p  ~/path/to/where/you/want/your/access/logs/nginx ~/path/to/where/you/want/your/access/logs/gunicorn`
 
