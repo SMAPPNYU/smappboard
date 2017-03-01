@@ -50,6 +50,42 @@ takes you to a page that cna be used to manage permissions for each collection, 
 
 takes you to a page that has the current top global twitter trends, feulued by an a twitter api 4 token set in config.py
 
+# adding terms
+
+add a term - 
+```
+value: 
+
+#turkeyprotest
+
+type of filter:
+
+track
+```
+
+add a user_id - 
+```
+value:
+
+1275323112
+
+type of filter:
+
+follow
+```
+
+add a geobox -
+```
+value:
+
+-77.042 38.88 -77.0103 38.894
+
+type of filter:
+
+location
+```
+
+
 #development
 
 if you try to run the oauth routes for twitter (specifically the /login route) it will complain at you with [this issue](http://stackoverflow.com/questions/37950999/twitter-oauth-with-flask-oauthlib-failed-to-generate-request-token):
