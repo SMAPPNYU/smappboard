@@ -9,3 +9,4 @@ dependencies:
     - Flask-Bootstrap==3.3.6.0
     - tweepy==3.5.0
     - Flask-OAuthlib==0.9.3
+    - Flask-WTF==0.12

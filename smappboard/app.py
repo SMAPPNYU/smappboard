@@ -8,6 +8,7 @@ import ast
 import glob
 import json
 import locale
+import pytz
 import tweepy
 import pysmap
 
@@ -16,7 +17,7 @@ from datetime import datetime, timedelta
 from bson.json_util import dumps
 
 import smappboard.models
-import smappboard.views
+from smappboard.forms import add_term
 
 from flask import g, session, abort, redirect, url_for, request, Flask, render_template, jsonify, flash
 from flask_oauthlib.client import OAuth
@@ -36,8 +37,6 @@ twitter = oauth.remote_app(
     consumer_key=app.config['SMAPPBOARD_CONSUMER_KEY'],
     consumer_secret=app.config['SMAPPBOARD_CONSUMER_SECRET']
 )
-
-from smappboard.models import filter_criterion, permission, post_filter, tweet
 
 #decorator for a function to only allow people who have logged into twitter
 def twitter_logged_in(func):
@@ -74,13 +73,14 @@ def datasets_list():
 @app.route('/dataset/<string:data_set_name>', methods=['GET'])
 @twitter_logged_in
 def single_dataset(data_set_name):
+    add_term_form = add_term.AddTerm()
     start_path = os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name)
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(start_path):
         for f in filenames:
             fp = os.path.join(dirpath, f)
             total_size += os.path.getsize(fp)
-    paths = sorted([path.replace(os.path.join('/mnt/olympus/',data_set_name,'data/'),'') for path in glob.glob(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'data', '*'))])
+    paths = sorted([path.replace(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],data_set_name,'data/'),'') for path in glob.glob(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'data', '*'))])
     metadata = json.load(open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'metadata', 'metadata.json')))
     filters = [json.loads(line) for line in open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],data_set_name, 'filters', 'filters.json'))]
     user_screen_names = [permission[0] for permission in metadata['authorized_twitter_handles']]
@@ -93,7 +93,8 @@ def single_dataset(data_set_name):
             metadata=metadata,
             dataset_size=total_size/1000000000,
             filter_list=filters,
-            user_logged_in=current_user())
+            user_logged_in=current_user(),
+            form=add_term_form)
     else:
         return render_template('error.html', error={'message': 'you are not an authorized user for this dataset', 'code': 403, 'response_code': 403}, user_logged_in=current_user())
 
@@ -184,6 +185,43 @@ def get_current_worlwide_trends():
     # use your own token to get trends
     elif request.method == 'POST':
         return jsonify({"message": "not implemented"}), 200
+
+'''
+form responses
+'''
+
+@app.route('/internal/form_add_term/<string:dataset_name>', methods=['POST'])
+def form_add_links_to_hex(dataset_name):
+    term_add = add_term.AddTerm(request.form)
+    if request.form and term_add.validate_on_submit():
+        value = request.form['value']
+        filter_type = request.form['filter_type']
+
+        print(value.split(' '))
+        print(filter_type)
+
+        if filter_type == 'location':
+            value = [float(x) for x in list(filter(None, value.split(' ')))]
+        elif filter_type == 'follow':
+            value = int(value)
+        print(value)
+        print(filter_type)
+
+        # open filter file and update it
+        with open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],dataset_name,'filters/filters.json'), 'r') as f:
+            list_of_json = []
+            for line in f:
+                line.strip()
+                list_of_json.append(line.strip())
+            line = {"value": value, "date_added": datetime.utcnow().replace(tzinfo=pytz.utc).strftime("%a %b %d %H:%M:%S +0000 %Y"), "date_removed": None, "filter_type": filter_type, "turnoff_date": None, "active": True}
+            list_of_json.append(json.dumps(line))
+        with open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],dataset_name,'filters/filters.json'), 'w') as f:
+            for line in list_of_json:
+                f.write(line)
+                f.write('\n')
+        return redirect(url_for('single_dataset', data_set_name=dataset_name))
+    else:
+        return render_template('error.html', error={'message': 'you are not an authorized user for this dataset', 'code': 403, 'response_code': 403}, user_logged_in=current_user())
 
 '''
 oauth & 'login' routes

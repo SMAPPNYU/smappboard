@@ -68,8 +68,11 @@ load environment vars with `source env.sh` (needs to be done everytime you resta
 
 export a flask secret wih `export FLASK_SECRET_KEY=YOUR_SECRET` read aobut how to generate a secret [here](https://gist.github.com/geoffalday/2021517) (save this secret because you'll need to use it for future setups)
 
-then type `make run` or `gunicorn smappboard.app:app`
+then type `make runprod` you can check the makefile to see what it does exactly but it basically run gunicorn with a few workers.
 
+youll have to craete files:
+env.sh (in project root)
+smappboard_users.json (next to app.py in smappboard/)
 
 #how to connect to olympus
 
