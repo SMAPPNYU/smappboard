@@ -197,15 +197,10 @@ def form_add_links_to_hex(dataset_name):
         value = request.form['value']
         filter_type = request.form['filter_type']
 
-        print(value.split(' '))
-        print(filter_type)
-
         if filter_type == 'location':
             value = [float(x) for x in list(filter(None, value.split(' ')))]
         elif filter_type == 'follow':
             value = int(value)
-        print(value)
-        print(filter_type)
 
         # open filter file and update it
         with open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],dataset_name,'filters/filters.json'), 'r') as f:
