@@ -163,8 +163,6 @@ def get_current_worlwide_trends():
         try:
             # https://dev.twitter.com/rest/reference/get/trends/place
             global_trends = api.trends_place(1)[0]
-            # for getting commas, did it dif elsewhere
-            # for some reason jinja isnt working here
             locale.setlocale(locale.LC_ALL, 'en_US')
             tweet_volume = [
                 {

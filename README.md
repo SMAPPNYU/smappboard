@@ -18,35 +18,19 @@
 
 [nginx setup](#nginx_setup)
 
-#/datasets
+#user_guide
 
-lists all collections that should be running
+1 - go to [http://philosoraptor.bio.nyu.edu/](http://philosoraptor.bio.nyu.edu/)
 
-#/dataset/data_set_name
+2 - click the 'sign in with twitter' button
 
-get the page for an individual dataset, this is where you can do things related to that dataset
-
-#/access
-
-takes you to a page that shows individual user permissions
-
-#/trending
-
-takes you to a page that has the current top global twitter trends, feulued by an a twitter api token with a standard rate 15 per 15 min rate limit, so dont reload like crazy.
-
-#/samples
-
-lists the names of the datasets you can get samples for. click a dataset name to get a sample for it.
-
-#/sample/data_set_name
-
-get you samples of a dataset from the most recent file for dataset_name.
+3 - if your twitter account is authorized you should be redirected to the main page (the first one when you come to the site). if you are not autorized you need to ask a programmer to add your id to the list of authorized users.
 
 #how to add terms to a dataset stream:
 
 1 - click datasets
 
-2 - click on the name of the dataset
+2 - click on the name of the dataset you want to see. if you are not autorized you need to ask a programmer to add your id to the list of authorized users for that dataset.
 
 3 - click filters and scroll to the bottom, add a term by filling in the two fields like so - 
 ```
@@ -80,6 +64,32 @@ type of filter:
 
 location
 ```
+
+#programmer_guide
+
+#/datasets
+
+lists all collections that should be running
+
+#/dataset/data_set_name
+
+get the page for an individual dataset, this is where you can do things related to that dataset
+
+#/access
+
+takes you to a page that shows individual user permissions
+
+#/trending
+
+takes you to a page that has the current top global twitter trends, feulued by an a twitter api token with a standard rate 15 per 15 min rate limit, so dont reload like crazy.
+
+#/samples
+
+lists the names of the datasets you can get samples for. click a dataset name to get a sample for it.
+
+#/sample/data_set_name
+
+get you samples of a dataset from the most recent file for dataset_name.
 
 #static
 
