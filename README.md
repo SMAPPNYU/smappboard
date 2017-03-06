@@ -18,10 +18,6 @@
 
 [nginx setup](#nginx_setup)
 
-#/
-
-takes you to the main dashboard
-
 #/datasets
 
 lists all collections that should be running
