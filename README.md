@@ -41,7 +41,7 @@ lists the names of the datasets you can get samples for. click a dataset name to
 
 #/sample/data_set_name
 
-get you samples of a dataset from the most recent file for dataset_name
+get you samples of a dataset from the most recent file for dataset_name.
 
 #how to add terms to a dataset stream:
 
