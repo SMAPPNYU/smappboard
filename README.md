@@ -8,29 +8,16 @@
 ```
 :flower_playing_cards: smappboard is a flask app for the smapp dashboard, previously smapp-twitter-admin.
 
-#app.py
+[/](#/)
+[datasets](#/datasets)
+[access](#/access)
+[samples](#/samples)
+[development](#development)
+[nginx setup](#nginx_setup)
 
-core app logic file with all routes
+#/
 
-#models
-
-data models for the app
-
-#static
-
-static files for css, bootstrap, themes, etc
-
-#templates
-
-jinja2 templates for displaying the pages of our flask app
-
-#tests 
-
-tests for the flask app
-
-#/smappboard
-
-takes you to the main dashboard where you can start, stop, and pause collections. primary dashboard 
+takes you to the main dashboard
 
 #structure
 
@@ -44,15 +31,25 @@ get the page for an individual dataset, this is where you can do things related 
 
 #/access
 
-takes you to a page that cna be used to manage permissions for each collection, remove a user from all collections, etc.
+takes you to a page that shows individual user permissions
 
-#/trends
+#/trending
 
-takes you to a page that has the current top global twitter trends, feulued by an a twitter api 4 token set in config.py
+takes you to a page that has the current top global twitter trends, feulued by an a twitter api token with a standard rate 15 per 15 min rate limit, so dont reload like crazy.
 
-# adding terms
+#/samples
 
-add a term - 
+get you samples of a dataset from the most recent file.
+
+#/sample/data_set_name
+
+#how to add terms to a dataset stream:
+
+1 - click datasets
+
+2 - click on the name of the dataset
+
+3 - click filters and scroll to the bottom, add a term by filling in the two fields like so - 
 ```
 value: 
 
@@ -85,8 +82,21 @@ type of filter:
 location
 ```
 
+#static
+
+static files for css, bootstrap, themes, etc
+
+#templates
+
+jinja2 templates for displaying the pages of our flask app
+
+#tests 
+
+tests for the flask app
 
 #development
+
+core app logic is in app.py, idecided against using models, views and separating out all the code as for this dashboard this created a lot of extra uneeded complexity. complexity that was difficult to maintain and keep the dashboard working (you can see this in the old dashboard, [smapp-twitter-admin](https://github.com/SMAPPNYU/smapp-twitter-admin). if the ink breaks look inside the sandbox which also functions as a graveyard.)
 
 if you try to run the oauth routes for twitter (specifically the /login route) it will complain at you with [this issue](http://stackoverflow.com/questions/37950999/twitter-oauth-with-flask-oauthlib-failed-to-generate-request-token):
 
@@ -140,7 +150,9 @@ you can edit the script to mount /scratch/olympus (more performant but gets purg
 
 you may have to remove defer_permissions from sshfs_mount on some unix oses. sshfs on mac is a bit different from those places.
 
-##how to setup nginx (the http server) and gunicorn (the app server):
+#nginx_setup
+
+how to setup nginx (the http server) and gunicorn (the app server):
 
 there are a 100 different ways to configure nginx. this is the way that works well for flask apps and is modular.
 
@@ -199,7 +211,7 @@ note `proxy_pass` is the bind address of your gunicorn deamon / porgram, i've le
 
 7 - run gunicorn app sever
 
-`/path/to/python /path/to/gunicorn smapp_twitter_admin:app -w 4 -t 120 -D --access-logfile logs/gunicorn/gunicorn_access_log.log --error-logfile logs/gunicorn/gunicorn_error_log.log`
+`gunicorn smappboard.app:app -w 4 -t 120 -D --access-logfile /home/YOUR_USER/logs/gunicorn_access.log --error-logfile  /home/YOUR_USER/logs/gunicorn_error.log`
 
 `gunicorn -h` to see what these flags do
 
