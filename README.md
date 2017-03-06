@@ -95,7 +95,7 @@ tests for the flask app
 
 #development
 
-core app logic is in app.py, idecided against using models, views and separating out all the code as for this dashboard this created a lot of extra uneeded complexity. complexity that was difficult to maintain and keep the dashboard working (you can see this in the old dashboard, [smapp-twitter-admin](https://github.com/SMAPPNYU/smapp-twitter-admin). if the ink breaks look inside the sandbox which also functions as a graveyard.)
+core app logic is in app.py, decided against using models, views and separating out all the code as for this dashboard this created a lot of extra uneeded complexity. my goal was: simple functionality that was easy to maintain. all code is right in front of you instead scattered through 10 layers of abstraction. complexity that was difficult to maintain and keep the dashboard working (you can see this in the old dashboard, [smapp-twitter-admin](https://github.com/SMAPPNYU/smapp-twitter-admin). if the link breaks look inside the sandbox which also functions as a graveyard.)
 
 if you try to run the oauth routes for twitter (specifically the /login route) it will complain at you with [this issue](http://stackoverflow.com/questions/37950999/twitter-oauth-with-flask-oauthlib-failed-to-generate-request-token):
 
