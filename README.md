@@ -22,7 +22,7 @@
 
 lists all collections that should be running
 
-#/dataset/dataset_name
+#/dataset/data_set_name
 
 get the page for an individual dataset, this is where you can do things related to that dataset
 
