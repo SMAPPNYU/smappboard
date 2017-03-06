@@ -8,11 +8,14 @@
 ```
 :flower_playing_cards: smappboard is a flask app for the smapp dashboard, previously smapp-twitter-admin.
 
-[/](#/)
 [datasets](#/datasets)
+
 [access](#/access)
+
 [samples](#/samples)
+
 [development](#development)
+
 [nginx setup](#nginx_setup)
 
 #/
