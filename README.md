@@ -41,6 +41,8 @@ get you samples of a dataset from the most recent file.
 
 #/sample/data_set_name
 
+get you samples of a dataset from the most recent file for dataset_name
+
 #how to add terms to a dataset stream:
 
 1 - click datasets
