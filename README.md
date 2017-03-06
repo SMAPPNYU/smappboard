@@ -37,7 +37,7 @@ takes you to a page that has the current top global twitter trends, feulued by a
 
 #/samples
 
-get you samples of a dataset from the most recent file.
+lists the names of the datasets you can get samples for. click a dataset name to get a sample for it.
 
 #/sample/data_set_name
 
