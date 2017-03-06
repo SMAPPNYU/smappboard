@@ -105,9 +105,7 @@ flask_oauthlib.client.OAuthException: Failed to generate request token
 
 this is caused by lacking a callback url setting on your app's page. if you are working on localhost this is a pain. you can put a placeholder url there until you get the real one.
 
-everytime you go to develop run these steps:
-
-create anaconda environment `conda env create`
+create anaconda environment `conda env create -f environment.yml`
 
 load environment vars with `source env.sh` (needs to be done everytime you restart your commandline)
 
@@ -115,7 +113,7 @@ export a flask secret wih `export FLASK_SECRET_KEY=YOUR_SECRET` read aobut how t
 
 then type `make runprod` you can check the makefile to see what it does exactly but it basically run gunicorn with a few workers.
 
-youll have to craete files:
+you will have to create files:
 env.sh (in project root)
 smappboard_users.json (next to app.py in smappboard/)
 
