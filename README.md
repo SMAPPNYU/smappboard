@@ -19,8 +19,6 @@
 
 takes you to the main dashboard
 
-#structure
-
 #/datasets
 
 lists all collections that should be running
