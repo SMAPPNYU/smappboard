@@ -17,7 +17,7 @@
     - [development](#development)
     - [nginx setup](#nginx_setup)
 
-#user_guide
+# user_guide
 
 1 - go to [http://philosoraptor.bio.nyu.edu/](http://philosoraptor.bio.nyu.edu/)
 
@@ -25,7 +25,7 @@
 
 3 - if your twitter account is authorized you should be redirected to the main page (the first one when you come to the site). if you are not autorized you need to ask a programmer to add your id to the list of authorized users.
 
-#how to add terms to a dataset stream:
+# how to add terms to a dataset stream:
 
 1 - click datasets
 
@@ -35,7 +35,7 @@
 ```
 value: 
 
-#turkeyprotest
+# turkeyprotest
 
 type of filter:
 
@@ -66,43 +66,43 @@ location
 
 #programmer_guide
 
-#/datasets
+# /datasets
 
 lists all collections that should be running
 
-#/dataset/data_set_name
+# /dataset/data_set_name
 
 get the page for an individual dataset, this is where you can do things related to that dataset
 
-#/access
+# /access
 
 takes you to a page that shows individual user permissions
 
-#/trending
+# /trending
 
 takes you to a page that has the current top global twitter trends, feulued by an a twitter api token with a standard rate 15 per 15 min rate limit, so dont reload like crazy.
 
-#/samples
+# /samples
 
 lists the names of the datasets you can get samples for. click a dataset name to get a sample for it.
 
-#/sample/data_set_name
+# /sample/data_set_name
 
 get you samples of a dataset from the most recent file for dataset_name.
 
-#static
+# static
 
 static files for css, bootstrap, themes, etc
 
-#templates
+# templates
 
 jinja2 templates for displaying the pages of our flask app
 
-#tests 
+# tests 
 
 tests for the flask app
 
-#development
+# development
 
 core app logic is in app.py, decided against using models, views and separating out all the code as for this dashboard this created a lot of extra uneeded complexity. my goal was: simple functionality that was easy to maintain. all code is right in front of you instead scattered through 10 layers of abstraction. complexity that was difficult to maintain and keep the dashboard working (you can see this in the old dashboard, [smapp-twitter-admin](https://github.com/SMAPPNYU/smapp-twitter-admin). if the link breaks look inside the sandbox which also functions as a graveyard.)
 
@@ -126,7 +126,7 @@ you will have to create files:
 env.sh (in project root)
 smappboard_users.json (next to app.py in smappboard/)
 
-#how to connect to olympus
+# how to connect to olympus
 
 1 - map a port from a machine with scratch to the machine running the flask app
 
@@ -251,7 +251,7 @@ resources:
 
 [nginx tutorial](https://www.digitalocean.com/community/tutorials/understanding-the-nginx-configuration-file-structure-and-configuration-contexts)
 
-#requirements.txt
+# requirements.txt
 
 dependencies to run this flask app
 
@@ -260,7 +260,7 @@ install with:
 ```bash
 pip install -r requirements.txt
 ```
-#env.sh
+# env.sh
 
 make an env.sh
 ```
