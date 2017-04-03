@@ -187,6 +187,7 @@ form responses
 '''
 
 @app.route('/internal/form_add_term/<string:dataset_name>', methods=['POST'])
+@twitter_logged_in
 def form_add_term_to_filters(dataset_name):
     term_add = add_term.AddTerm(request.form)
     if request.form and term_add.validate_on_submit():
