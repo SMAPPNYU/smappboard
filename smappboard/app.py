@@ -190,7 +190,7 @@ form responses
 @twitter_logged_in
 def form_add_term_to_filters(dataset_name):
     term_add = add_term.AddTerm(request.form)
-    if request.form and term_add.validate_on_submit():
+    if ('w' in get_permissions_for_user(dataset_name, current_user())) and request.form and term_add.validate_on_submit():
         value = request.form['value']
         filter_type = request.form['filter_type']
 
@@ -246,6 +246,18 @@ def current_user():
     if token:
         return token.get('screen_name').lower()
     return None
+
+# if the user exists on the permissions list
+# return their permission, if they dont exist
+# return an empty string
+def get_permissions_for_user(dataset_name, cuser):
+    with open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],dataset_name,'metadata/metadata.json'), 'r') as f:
+        authed_users_list = json.load(f)["authorized_twitter_handles"]
+        for user, permission in authed_users_list:
+            user = user.lower()
+            if cuser == user:
+                return permission
+        return ''
 
 if __name__ == '__main__':
     app.run()
