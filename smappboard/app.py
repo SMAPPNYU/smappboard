@@ -115,10 +115,11 @@ def single_access(user_name):
         om = open(metadata,'r')
         metadata = json.load(om)
         permission = 'nil'
-        for handle,permission in metadata['authorized_twitter_handles']:
+        for handle, permission in metadata['authorized_twitter_handles']:
             if handle == user_name:
                 permission = permission
-        datasets_for_user.append([m.group(1), permission])
+                datasets_for_user.append([m.group(1), permission])
+                break
         om.close()
     return render_template('single_access.html',
         user_screen_name=user_name,
