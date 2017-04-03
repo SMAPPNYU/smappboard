@@ -27,6 +27,7 @@
           <p>filter type: {{ filter.filter_type }}</p>
           <p>filter: <b>{{ filter.value }}</b></p>
           {% endfor %}
+          {% if form %}
           <form action="/internal/form_add_term/{{ dataset_name }}" method="POST" name="add_term">
               <div class="input-container form-group col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
                 {{ form.hidden_tag() }}
@@ -40,6 +41,7 @@
                 <button type="submit" class="btn btn-default center-block">add term</button>
               </div>
             </form>
+            {% endif %}
         </div>
         <div role="tabpanel" class="tab-pane" id="access">
           {% for user_access in users_access %}

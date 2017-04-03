@@ -106,7 +106,7 @@ def single_dataset(data_set_name):
                 dataset_size=total_size/1000000000,
                 filter_list=[],
                 user_logged_in=current_user(),
-                form=add_term_form)
+                form=None)
     return render_template('error.html', error={'message': 'you are not an authorized user for this dataset', 'code': 403, 'response_code': 403}, user_logged_in=current_user())
 
 # the route to manage access (need to have admin twitter id)
