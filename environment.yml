@@ -1,6 +1,6 @@
 name: smappboard
 dependencies:
-- python=3.5
+- python=3.6
 - pip
 - pip:
     - flask==0.11

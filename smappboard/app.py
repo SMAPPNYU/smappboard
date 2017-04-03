@@ -7,7 +7,6 @@ import re
 import ast
 import glob
 import json
-import locale
 import pytz
 import tweepy
 import pysmap
@@ -163,11 +162,10 @@ def get_current_worlwide_trends():
         try:
             # https://dev.twitter.com/rest/reference/get/trends/place
             global_trends = api.trends_place(1)[0]
-            locale.setlocale(locale.LC_ALL, 'en_US')
             tweet_volume = [
                 {
                 'url': trend.get('url'), 'name': trend.get('name'),
-                'tweet_volume': locale.format("%d", int(trend.get('tweet_volume')) if trend.get('tweet_volume') else 0, grouping=True)
+                'tweet_volume': int(trend.get('tweet_volume')) if trend.get('tweet_volume') else 0
                 } 
                 for trend in global_trends['trends']
             ]
@@ -189,7 +187,7 @@ form responses
 '''
 
 @app.route('/internal/form_add_term/<string:dataset_name>', methods=['POST'])
-def form_add_links_to_hex(dataset_name):
+def form_add_term_to_filters(dataset_name):
     term_add = add_term.AddTerm(request.form)
     if request.form and term_add.validate_on_submit():
         value = request.form['value']
