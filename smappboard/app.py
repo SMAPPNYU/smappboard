@@ -79,23 +79,35 @@ def single_dataset(data_set_name):
         for f in filenames:
             fp = os.path.join(dirpath, f)
             total_size += os.path.getsize(fp)
-    paths = sorted([path.replace(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],data_set_name,'data/'),'') for path in glob.glob(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'data', '*'))])
-    metadata = json.load(open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'metadata', 'metadata.json')))
-    filters = [json.loads(line) for line in open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],data_set_name, 'filters', 'filters.json'))]
-    user_screen_names = [permission[0] for permission in metadata['authorized_twitter_handles']]
+    metadata_path = os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'metadata', 'metadata.json')
+    filter_path = os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],data_set_name, 'filters', 'filters.json')
 
-    if current_user() in user_screen_names:
-        return render_template('dataset.html', 
-            dataset_name=data_set_name, 
-            file_paths=paths,
-            users_access=metadata['authorized_twitter_handles'],
-            metadata=metadata,
-            dataset_size=total_size/1000000000,
-            filter_list=filters,
-            user_logged_in=current_user(),
-            form=add_term_form)
-    else:
-        return render_template('error.html', error={'message': 'you are not an authorized user for this dataset', 'code': 403, 'response_code': 403}, user_logged_in=current_user())
+    try:
+        paths = sorted([path.replace(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],data_set_name,'data/'),'') for path in glob.glob(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'data', '*'))])
+        metadata = json.load(open(metadata_path))
+        filters = [json.loads(line) for line in open(filter_path)]
+        user_screen_names = [permission[0] for permission in metadata['authorized_twitter_handles']]
+        if current_user() in user_screen_names:
+            return render_template('dataset.html', 
+                dataset_name=data_set_name, 
+                file_paths=paths,
+                users_access=metadata['authorized_twitter_handles'],
+                metadata=metadata,
+                dataset_size=total_size/1000000000,
+                filter_list=filters,
+                user_logged_in=current_user(),
+                form=add_term_form)
+    except (FileNotFoundError):
+            return render_template('dataset.html', 
+                dataset_name=data_set_name, 
+                file_paths=paths,
+                users_access=[],
+                metadata={},
+                dataset_size=total_size/1000000000,
+                filter_list=[],
+                user_logged_in=current_user(),
+                form=add_term_form)
+    return render_template('error.html', error={'message': 'you are not an authorized user for this dataset', 'code': 403, 'response_code': 403}, user_logged_in=current_user())
 
 # the route to manage access (need to have admin twitter id)
 @app.route('/access', methods=['GET'])
