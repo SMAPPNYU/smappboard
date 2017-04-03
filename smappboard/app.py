@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 from bson.json_util import dumps
 
 import smappboard.models
-from smappboard.forms import add_term
+from smappboard.forms import add_term, change_permission
 
 from flask import g, session, abort, redirect, url_for, request, Flask, render_template, jsonify, flash
 from flask_oauthlib.client import OAuth
@@ -113,8 +113,10 @@ def single_dataset(data_set_name):
 @app.route('/access', methods=['GET'])
 @twitter_logged_in
 def access_list():
-    users = json.load(open(os.path.dirname(os.path.abspath(__file__))+'/'+app.config['PATH_TO_SMAPPBOARD_USERS'],'r'))
-    return render_template('datasets_access.html', users=users, user_logged_in=current_user())
+    with open(os.path.dirname(os.path.abspath(__file__))+'/'+app.config['PATH_TO_SMAPPBOARD_USERS'], 'r') as file:
+        users_list = [v.lower() for v in json.load(file)]
+        users = json.load(open(os.path.dirname(os.path.abspath(__file__))+'/'+app.config['PATH_TO_SMAPPBOARD_USERS'],'r'))
+        return render_template('datasets_access.html', users=users, user_logged_in=current_user())
 
 # the route to manage access (need to have admin twitter id)
 @app.route('/single_access/<string:user_name>', methods=['GET'])
@@ -133,10 +135,22 @@ def single_access(user_name):
                 datasets_for_user.append([m.group(1), permission])
                 break
         om.close()
-    return render_template('single_access.html',
-        user_screen_name=user_name,
-        user_datasets=datasets_for_user,
-        user_logged_in=current_user())
+
+    if is_user_admin(current_user()):
+        return render_template('single_access.html',
+            user_screen_name=user_name,
+            user_datasets=datasets_for_user,
+            user_logged_in=current_user(),
+            form=change_permission.ChangePermission())
+    else:
+        return render_template('single_access.html',
+            user_screen_name=user_name,
+            user_datasets=datasets_for_user,
+            user_logged_in=current_user(),
+            form=None)
+
+    return render_template('error.html', error={'message': 'there was an error in the route', 'code': 500, 'response_code': 500}, user_logged_in=current_user())
+
 
 # the route to get to all datasets for getting a sample of recent tweet objects
 @app.route('/samples', methods=['GET'])
@@ -228,6 +242,24 @@ def form_add_term_to_filters(dataset_name):
     else:
         return render_template('error.html', error={'message': 'you are not an authorized user for this dataset', 'code': 403, 'response_code': 403}, user_logged_in=current_user())
 
+@app.route('/internal/form_change_permission/<string:user_name>', methods=['POST'])
+@twitter_logged_in
+def form_change_permission(user_name):
+    change_permission_form = change_permission.ChangePermission(request.form)
+
+    if request.form and change_permission_form.validate_on_submit() and is_user_admin(current_user()):
+        try:
+            with open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],request.form['dataset'],'metadata/metadata.json'), 'r') as f:
+                metadata = json.load(f)
+                for i,user_permission in enumerate(metadata['authorized_twitter_handles']):
+                    if user_permission[0] == user_name:
+                        metadata['authorized_twitter_handles'][i][1] = request.form['permission']
+        except (FileNotFoundError):
+            return render_template('error.html', error={'message': 'no such dataset exists', 'code': 404, 'response_code': 404}, user_logged_in=current_user())
+    json.dump(metadata, open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],request.form['dataset'],'metadata/metadata.json'), 'w'))
+
+    return redirect(url_for('single_access', user_name=user_name))
+
 '''
 oauth & 'login' routes
 '''
@@ -263,14 +295,21 @@ def current_user():
 # if the user exists on the permissions list
 # return their permission, if they dont exist
 # return an empty string
-def get_permissions_for_user(dataset_name, cuser):
+def get_permissions_for_user(dataset_name, user):
     with open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],dataset_name,'metadata/metadata.json'), 'r') as f:
-        authed_users_list = json.load(f)["authorized_twitter_handles"]
+        authed_users_list = json.load(f)['authorized_twitter_handles']
         for user, permission in authed_users_list:
-            user = user.lower()
-            if cuser == user:
+            cuser = user.lower()
+            if user == cuser:
                 return permission
         return ''
+
+# returns true if a user is an admin 
+# false if a user is not an admin
+# admins should be smapp PIs
+def is_user_admin(user):
+        with open(os.path.dirname(os.path.abspath(__file__))+'/'+app.config['PATH_TO_SMAPPBOARD_ADMINS'], 'r') as file:
+            return user in [v.lower() for v in json.load(file)]
 
 if __name__ == '__main__':
     app.run()

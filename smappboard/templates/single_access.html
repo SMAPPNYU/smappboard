@@ -10,4 +10,20 @@
 
 {% endfor %}
 
+{% if form %}
+	  	<form action="/internal/form_change_permission/{{ user_screen_name }}" method="POST" name="add_term">
+	      <div class="input-container form-group col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+	        {{ form.hidden_tag() }}
+	        {{ form.dataset(class="form-control") }}
+	      </div>
+	      <div class="input-container form-group col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
+	        {{ form.hidden_tag() }}
+	        {{ form.permission(class="form-control") }}
+	      </div>
+	      <div class="col-xs-12 center-block">
+	        <button type="submit" class="btn btn-default center-block">change permission</button>
+	      </div>
+	   	</form>
+    {% endif %}
+
 {% endblock %}
