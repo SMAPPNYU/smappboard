@@ -251,13 +251,17 @@ def form_change_permission(user_name):
         try:
             with open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],request.form['dataset'],'metadata/metadata.json'), 'r') as f:
                 metadata = json.load(f)
-                for i,user_permission in enumerate(metadata['authorized_twitter_handles']):
-                    if user_permission[0] == user_name:
-                        metadata['authorized_twitter_handles'][i][1] = request.form['permission']
+                permitted_users = list(zip(*metadata['authorized_twitter_handles']))[0]
+                if user_name not in permitted_users:
+                    metadata['authorized_twitter_handles'].append([user_name, request.form['permission']])
+                else:
+                    for i,user_permission in enumerate(metadata['authorized_twitter_handles']):
+                        if user_permission[0] == user_name:
+                            metadata['authorized_twitter_handles'][i][1] = request.form['permission']
+
         except (FileNotFoundError):
             return render_template('error.html', error={'message': 'no such dataset exists', 'code': 404, 'response_code': 404}, user_logged_in=current_user())
     json.dump(metadata, open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],request.form['dataset'],'metadata/metadata.json'), 'w'))
-
     return redirect(url_for('single_access', user_name=user_name))
 
 '''
