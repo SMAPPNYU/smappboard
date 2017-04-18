@@ -86,7 +86,7 @@ def single_dataset(data_set_name):
         paths = sorted([path.replace(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],data_set_name,'data/'),'') for path in glob.glob(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'data', '*'))])
         metadata = json.load(open(metadata_path))
         filters = [json.loads(line) for line in open(filter_path)]
-        user_screen_names = [permission[0] for permission in metadata['authorized_twitter_handles']]
+        user_screen_names = [permission[0].lower() for permission in metadata['authorized_twitter_handles']]
         if current_user() in user_screen_names:
             return render_template('dataset.html', 
                 dataset_name=data_set_name, 
@@ -302,8 +302,8 @@ def current_user():
 def get_permissions_for_user(dataset_name, user):
     with open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],dataset_name,'metadata/metadata.json'), 'r') as f:
         authed_users_list = json.load(f)['authorized_twitter_handles']
-        for user, permission in authed_users_list:
-            cuser = user.lower()
+        for cuser, permission in authed_users_list:
+            cuser = cuser.lower()
             if user == cuser:
                 return permission
         return ''
