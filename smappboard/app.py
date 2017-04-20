@@ -15,7 +15,6 @@ from functools import wraps
 from datetime import datetime, timedelta
 from bson.json_util import dumps
 
-import smappboard.models
 from smappboard.forms import add_term, change_permission
 
 from flask import g, session, abort, redirect, url_for, request, Flask, render_template, jsonify, flash
@@ -298,7 +297,7 @@ def current_user():
 
 # if the user exists on the permissions list
 # return their permission, if they dont exist
-# return an empty string
+# return an empty string, should be a model
 def get_permissions_for_user(dataset_name, user):
     with open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],dataset_name,'metadata/metadata.json'), 'r') as f:
         authed_users_list = json.load(f)['authorized_twitter_handles']
