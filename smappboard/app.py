@@ -86,7 +86,7 @@ def single_dataset(data_set_name):
         metadata = json.load(open(metadata_path))
         filters = [json.loads(line) for line in open(filter_path)]
         user_screen_names = [permission[0].lower() for permission in metadata['authorized_twitter_handles']]
-        if current_user() in user_screen_names:
+        if (current_user() in user_screen_names) or is_user_admin(current_user()):
             return render_template('dataset.html', 
                 dataset_name=data_set_name, 
                 file_paths=paths,
