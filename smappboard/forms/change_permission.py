@@ -1,5 +1,5 @@
 from flask_wtf import Form
-from wtforms.fields import StringField, SubmitField, PasswordField
+from wtforms.fields import StringField
 from wtforms.validators import DataRequired
 
 class ChangePermission(Form):

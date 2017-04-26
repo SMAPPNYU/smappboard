@@ -216,7 +216,7 @@ form responses
 @twitter_logged_in
 def form_add_term_to_filters(dataset_name):
     term_add = add_term.AddTerm(request.form)
-    if ('w' in get_permissions_for_user(dataset_name, current_user())) and request.form and term_add.validate_on_submit():
+    if (('w' in get_permissions_for_user(dataset_name, current_user())) or is_user_admin(current_user())) and request.form and term_add.validate_on_submit():
         value = request.form['value']
         filter_type = request.form['filter_type']
 
