@@ -15,7 +15,6 @@ from functools import wraps
 from datetime import datetime, timedelta
 from bson.json_util import dumps
 
-import smappboard.models
 from smappboard.forms import add_term, change_permission
 
 from flask import g, session, abort, redirect, url_for, request, Flask, render_template, jsonify, flash
@@ -86,8 +85,8 @@ def single_dataset(data_set_name):
         paths = sorted([path.replace(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],data_set_name,'data/'),'') for path in glob.glob(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'], data_set_name, 'data', '*'))])
         metadata = json.load(open(metadata_path))
         filters = [json.loads(line) for line in open(filter_path)]
-        user_screen_names = [permission[0] for permission in metadata['authorized_twitter_handles']]
-        if current_user() in user_screen_names:
+        user_screen_names = [permission[0].lower() for permission in metadata['authorized_twitter_handles']]
+        if (current_user() in user_screen_names) or is_user_admin(current_user()):
             return render_template('dataset.html', 
                 dataset_name=data_set_name, 
                 file_paths=paths,
@@ -217,7 +216,7 @@ form responses
 @twitter_logged_in
 def form_add_term_to_filters(dataset_name):
     term_add = add_term.AddTerm(request.form)
-    if ('w' in get_permissions_for_user(dataset_name, current_user())) and request.form and term_add.validate_on_submit():
+    if (('w' in get_permissions_for_user(dataset_name, current_user())) or is_user_admin(current_user())) and request.form and term_add.validate_on_submit():
         value = request.form['value']
         filter_type = request.form['filter_type']
 
@@ -298,12 +297,12 @@ def current_user():
 
 # if the user exists on the permissions list
 # return their permission, if they dont exist
-# return an empty string
+# return an empty string, should be a model
 def get_permissions_for_user(dataset_name, user):
     with open(os.path.join(app.config['SMAPPBOARD_SSHFS_MOUNT_POINT'],dataset_name,'metadata/metadata.json'), 'r') as f:
         authed_users_list = json.load(f)['authorized_twitter_handles']
-        for user, permission in authed_users_list:
-            cuser = user.lower()
+        for cuser, permission in authed_users_list:
+            cuser = cuser.lower()
             if user == cuser:
                 return permission
         return ''
